@@ -10,6 +10,7 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.SimpleBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.proto.ProposeResponder;
 import jade.util.leap.ArrayList;
 import jade.util.leap.List;
 import ontology.peopleExampleOntology.Address;
