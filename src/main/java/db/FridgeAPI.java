@@ -2,7 +2,7 @@ package db;
 
 public class FridgeAPI {
 
-    public void getData() {
-
+    public int getData() {
+        return 100;
     }
 }

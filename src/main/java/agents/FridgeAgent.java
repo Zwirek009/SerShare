@@ -3,40 +3,32 @@ package agents;
 import behaviours.GetFridgeInternalStateRequest;
 import db.FridgeAPI;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.DataStore;
 import roles.FridgeStateController;
-
-import java.util.Map;
 
 public class FridgeAgent extends SerShareAgent implements FridgeStateController {
 
     public FridgeAPI fridgeAPI;
-    public Map<String, Integer> fridgeState;
 
     protected void setup() {
         super.setup();
         // Add the CyclicBehaviour
-
         fridgeAPI = new FridgeAPI();
-
-        addBehaviour(new CheckFridgeBehaviour(this) {
-            public void action() {
-                System.out.println("Cycling");
-            }
-        });
-
-        addBehaviour(new GetFridgeInternalStateRequest(this));
+        DataStore commonDataStore = new DataStore();
+        addBehaviour(new CheckFridgeBehaviour(this, commonDataStore));
+        addBehaviour(new GetFridgeInternalStateRequest(this, commonDataStore));
 
     }
 
     class CheckFridgeBehaviour extends CyclicBehaviour {
-        CheckFridgeBehaviour(FridgeAgent fridgeAgent) {
+        CheckFridgeBehaviour(FridgeAgent fridgeAgent, DataStore ds) {
             super(fridgeAgent);
+            setDataStore(ds);
+            getDataStore().put("FRIDGE_DATA", fridgeAPI.getData());
         }
 
         public void action() {
-
-            System.out.println("Check fridge");
-            fridgeAPI.getData();
+          //  getDataStore().put("FRIDGE_DATA", fridgeAPI.getData());
         }
     }
 
