@@ -1,6 +1,6 @@
-package behaviours;
+package agents.storekepper.behaviours;
 
-import agents.StorekeeperAgent;
+import agents.storekepper.StorekeeperAgent;
 import customer.FoodPlan;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -10,18 +10,13 @@ import jade.lang.acl.UnreadableException;
 import utils.SerShareConstants;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class SendFoodPlanRequest extends Behaviour {
-      private AID[] mobiles;
-      private List<FoodPlan> plans;
       private MessageTemplate mt; // The template to receive replies
       private int step = 0;
 
       public SendFoodPlanRequest(StorekeeperAgent agent) {
         super(agent);
-        this.mobiles = agent.getMobiles();
-        this.plans = new ArrayList<>();
   }
 
   public void action() {
@@ -29,7 +24,7 @@ public class SendFoodPlanRequest extends Behaviour {
       case 0:
         // wysłanie zapytania do wszystkich
         ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-        for (AID m : mobiles) {
+        for (AID m : getAgent().getMobiles()) {
           cfp.addReceiver(m);
         }
         cfp.setConversationId("food-plan");
@@ -50,12 +45,11 @@ public class SendFoodPlanRequest extends Behaviour {
             // Reply received
             if (reply.getPerformative() == ACLMessage.INFORM && reply.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
               FoodPlan p = (FoodPlan) reply.getContentObject();
-              this.plans.add(p);
+              getAgent().addFoodPlan(p);
             } else {
               System.out.println("Unexpected response");
             }
-            if (this.plans.size() >= mobiles.length) {
-              ((StorekeeperAgent)this.myAgent).updateFoodPlans(this.plans);
+            if (getAgent().hasAllPlans()) {
               step = 2;
             }
           } else {
@@ -66,6 +60,10 @@ public class SendFoodPlanRequest extends Behaviour {
         }
         break;
     }
+  }
+
+  public StorekeeperAgent getAgent() {
+    return (StorekeeperAgent)myAgent;
   }
 
   public boolean done() {
