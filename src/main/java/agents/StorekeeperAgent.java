@@ -68,7 +68,6 @@ public class StorekeeperAgent extends SerShareAgent {
     return this.mobiles;
   }
 
-
   public void updateFoodPlans(List<FoodPlan> plans) {
     this.plans = plans;
   }

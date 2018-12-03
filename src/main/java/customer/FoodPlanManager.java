@@ -1,5 +1,6 @@
 package customer;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class FoodPlanManager {
@@ -17,8 +18,8 @@ public class FoodPlanManager {
         positions.add(pos1);
         positions.add(pos2);
 
-        Map<Date, List<FoodPlanPosition>> plan = new HashMap<>();
-        plan.put(new Date(2018, 12, 3), positions);
+        Map<LocalDate, List<FoodPlanPosition>> plan = new HashMap<>();
+        plan.put(LocalDate.of(2018, 12, 3), positions);
 
         return new FoodPlan(plan);
     }

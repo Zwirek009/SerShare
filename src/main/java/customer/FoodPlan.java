@@ -1,28 +1,42 @@
 package customer;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FoodPlan implements Serializable {
 
-    private Map<Date, List<FoodPlanPosition>> plan;
+    private Map<LocalDate, List<FoodPlanPosition>> plan;
 
-    public FoodPlan(Map<Date, List<FoodPlanPosition>> plan) {
+    public FoodPlan(Map<LocalDate, List<FoodPlanPosition>> plan) {
         this.plan = plan;
     }
 
-    public List<FoodPlanPosition> getPositions(Date date) {
+    public List<FoodPlanPosition> getPositions(LocalDate date) {
         return plan.get(date);
     }
 
-    public void deletePositions(Date date) {
+    public Set<LocalDate> getDates() { return plan.keySet(); }
+
+    public List<FoodPlanPosition> getPositionsBeforeDay(LocalDate date) {
+        return plan.entrySet().stream()
+            .filter(d -> d.getKey().isBefore(date))
+            .flatMap(d -> d.getValue().stream())
+            .collect(Collectors.toList());
+    }
+
+    public void deletePositionsToDay(LocalDate date) {
+        this.plan =  plan.entrySet().stream()
+            .filter(d -> d.getKey().isBefore(date))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public void deletePositions(LocalDate date) {
         plan.remove(date);
     }
 
-    public void addPositions(Date date, List<FoodPlanPosition> positions) {
+    public void addPositions(LocalDate date, List<FoodPlanPosition> positions) {
         List<FoodPlanPosition> posForDate = plan.get(date);
         if (posForDate != null)
             posForDate.addAll(positions);
@@ -30,7 +44,7 @@ public class FoodPlan implements Serializable {
             plan.put(date, positions);
     }
 
-    public void addPosition(Date date, FoodPlanPosition position) {
+    public void addPosition(LocalDate date, FoodPlanPosition position) {
         List<FoodPlanPosition> posForDate = plan.get(date);
         if (posForDate != null)
             posForDate.add(position);
@@ -40,7 +54,7 @@ public class FoodPlan implements Serializable {
         }
     }
 
-    public void deletePosition(Date date, FoodPlanPosition position) {
+    public void deletePosition(LocalDate date, FoodPlanPosition position) {
         List<FoodPlanPosition> posForDate = plan.get(date);
         if (posForDate != null)
             posForDate.remove(position);
