@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import static agents.merchant.MerchantAgent.LOGGER;
+
 public class PlanningOrder extends TickerBehaviour {
   public PlanningOrder(MerchantAgent agent) {
     super(agent, TimeUnit.MINUTES.toMillis(1));
@@ -17,20 +19,20 @@ public class PlanningOrder extends TickerBehaviour {
 
   @Override
   protected void onTick() {
-    MerchantAgent.LOGGER.log(Level.INFO, "Tick");
+    LOGGER.log(Level.INFO, "Tick");
     if(getAgent().isOrderTime()) {
       OrderResponse response = getAgent().makeOrder();
       ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
       for (AID m : response.getReceivers()) {
         inform.addReceiver(m);
       }
-      MerchantAgent.LOGGER.log(Level.INFO, "Send messages to " + response.getReceivers());
       try {
         inform.setContentObject(new Date());
+        getAgent().send(inform);
+        LOGGER.log(Level.INFO, "Send messages to " + response.getReceivers());
       } catch (IOException e) {
-        e.printStackTrace();
+        LOGGER.log(Level.WARNING, "Error when try send messages " + e.getMessage());
       }
-      getAgent().send(inform);
     } else {
       getAgent().planOrder();
     }

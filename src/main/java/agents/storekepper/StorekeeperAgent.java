@@ -1,7 +1,6 @@
 package agents.storekepper;
 
 import agents.SerShareAgent;
-import agents.merchant.MerchantAgent;
 import agents.storekepper.behaviours.ActionState;
 import agents.storekepper.behaviours.EstimateFridgeStatePlan;
 import agents.storekepper.behaviours.SendEstimatedFridgeStatePlan;
@@ -69,6 +68,7 @@ public class StorekeeperAgent extends SerShareAgent {
       this.state = ActionState.RUNNING;
     } else if(this.resendWhen == StorekeeperAgent.resendValue){
       addBehaviour(new SendFoodPlanRequest(this));
+
       LOGGER.log(Level.INFO, "Resend food plan request");
       this.resendWhen = 0;
     } else {
