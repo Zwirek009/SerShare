@@ -6,6 +6,7 @@ import jade.content.lang.sl.SLCodec;
 import jade.content.onto.Ontology;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.lang.acl.ACLMessage;
 import ontology.peopleExampleOntology.PeopleOntology;
 
 public class SerShareAgent extends Agent {
@@ -16,6 +17,13 @@ public class SerShareAgent extends Agent {
     protected void setup() {
         System.out.println("Agent " + getLocalName() + " started.");
         manager.registerLanguage(codec);
+    }
+
+    public void sendStringReply(ACLMessage msg, int type, String content) {
+        ACLMessage reply = msg.createReply();
+        reply.setPerformative(type);
+        reply.setContent(content);
+        send(reply);
     }
 
     // Put agent clean-up operations here

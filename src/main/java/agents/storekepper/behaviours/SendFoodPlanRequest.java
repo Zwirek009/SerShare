@@ -9,7 +9,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import utils.SerShareConstants;
 
-import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import static agents.storekepper.StorekeeperAgent.LOGGER;
@@ -34,10 +34,12 @@ public class SendFoodPlanRequest extends Behaviour {
         cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
         cfp.setLanguage(SerShareConstants.JAVASERIALIZATION);
         myAgent.send(cfp);
+
         // Prepare the template to get proposals
         mt = MessageTemplate.and(MessageTemplate.MatchConversationId("food-plan"),
             MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
         step = 2;
+
         LOGGER.log(Level.INFO, "Send food plan request");
         break;
       case 1:
@@ -45,14 +47,17 @@ public class SendFoodPlanRequest extends Behaviour {
         ACLMessage reply = myAgent.receive(mt);
         try {
           if (reply != null) {
-            // Reply received
-            if (reply.getPerformative() == ACLMessage.INFORM && reply.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
-              FoodPlan p = (FoodPlan) reply.getContentObject();
-              getAgent().addFoodPlan(p);
+            Optional<String> errors = validateMessage(reply);
+            if (errors.isPresent()) {
+              getAgent().sendStringReply(reply, ACLMessage.NOT_UNDERSTOOD, errors.get());
+
+              LOGGER.log(Level.WARNING, errors.get());
             } else {
-              LOGGER.log(Level.WARNING, "Unexpected response");
+              FoodPlan newPlan = (FoodPlan) reply.getContentObject();
+              getAgent().addFoodPlan(newPlan);
+
+              LOGGER.log(Level.INFO, "Get plan " + newPlan);
             }
-            LOGGER.log(Level.INFO, "Get food plan");
             if (getAgent().hasAllPlans()) {
               LOGGER.log(Level.INFO, "Get all food plan");
               step = 2;
@@ -60,11 +65,22 @@ public class SendFoodPlanRequest extends Behaviour {
           } else {
             block();
           }
-        } catch (UnreadableException e3) {
-          System.err.println(this.myAgent.getLocalName() + " catched exception " + e3.getMessage());
+        } catch (UnreadableException e) {
+          getAgent().sendStringReply(reply, ACLMessage.NOT_UNDERSTOOD, "( UnexpectedContent: " + e.getMessage() + ")");
+          LOGGER.log(Level.WARNING, "Error when try send messages " + e.getMessage());
         }
         break;
     }
+  }
+
+  private Optional<String> validateMessage(ACLMessage msg) {
+    if (msg.getPerformative() != ACLMessage.INFORM) {
+      return Optional.of("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");
+    }
+    if (!msg.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
+      return Optional.of("( (Unexpected-language " + msg.getLanguage() + ") )");
+    }
+    return Optional.empty();
   }
 
   public StorekeeperAgent getAgent() {
