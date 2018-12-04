@@ -1,19 +1,14 @@
 package customer;
 
+import utils.ProductConstants;
 import java.time.LocalDate;
 import java.util.*;
 
 public class FoodPlanManager {
 
-    private FoodPlan plan;
-
-    public FoodPlanManager() {
-        this.plan = getFoodPlansFromCutomer();
-    }
-
-    private FoodPlan getFoodPlansFromCutomer() {
-        FoodPlanPosition pos1 = new FoodPlanPosition("Milk", 1.5);
-        FoodPlanPosition pos2 = new FoodPlanPosition("Bread", 0.6);
+    private FoodPlan getFoodPlansFromCustomer() {
+        FoodPlanPosition pos1 = new FoodPlanPosition(ProductConstants.MILK, 1.5);
+        FoodPlanPosition pos2 = new FoodPlanPosition(ProductConstants.BREAD, 0.5);
         List<FoodPlanPosition> positions = new ArrayList<>();
         positions.add(pos1);
         positions.add(pos2);
@@ -25,10 +20,7 @@ public class FoodPlanManager {
     }
 
     public FoodPlan getPlan() {
-        return plan;
+        return getFoodPlansFromCustomer();
     }
 
-    public void setPlan(FoodPlan plan) {
-        this.plan = plan;
-    }
 }
