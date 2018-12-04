@@ -10,18 +10,25 @@ import jade.core.AID;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
 
 public class MerchantAgent extends SerShareAgent {
 
+  public static final Logger LOGGER = Logger.getLogger( MerchantAgent.class.getName() );
+
   private Map<AID, FoodPlan> shoppingList;
   private Optional<LocalDate> nextOrder = empty();
-  private int lastAsking = 0;
 
   protected void setup() {
     super.setup();
+    LOGGER.setLevel(Level.ALL);
+    LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
     this.shoppingList = new HashMap<>();
     addBehaviour(new GettingFoodPlans(this));
     addBehaviour(new PlanningOrder(this));
@@ -31,6 +38,7 @@ public class MerchantAgent extends SerShareAgent {
     nextOrder = shoppingList.values().stream()
         .flatMap(f -> f.getDates().stream())
         .min(LocalDate::compareTo);
+    LOGGER.log(Level.INFO, "PlanOrder: " + nextOrder);
   }
 
   public boolean isOrderTime() {
@@ -45,7 +53,7 @@ public class MerchantAgent extends SerShareAgent {
         .filter(o -> o.getValue().getPositionsBeforeDay(LocalDate.now()).size() > 0)
         .map(Map.Entry::getKey)
         .collect(Collectors.toList());
-    System.out.println("Zakupy: " + newOrder);
+    LOGGER.log(Level.INFO, "Make order: " + newOrder);
     return new OrderResponse(LocalDate.now().plusDays(7), customers);
   }
 

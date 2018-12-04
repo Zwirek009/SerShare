@@ -1,6 +1,7 @@
 package agents.storekepper;
 
 import agents.SerShareAgent;
+import agents.merchant.MerchantAgent;
 import agents.storekepper.behaviours.ActionState;
 import agents.storekepper.behaviours.EstimateFridgeStatePlan;
 import agents.storekepper.behaviours.SendEstimatedFridgeStatePlan;
@@ -13,9 +14,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.StreamHandler;
 
 public class StorekeeperAgent extends SerShareAgent {
-  private static int resendValue = 60;
+  private static int resendValue = 2;
+
+  public static final Logger LOGGER = Logger.getLogger( StorekeeperAgent.class.getName() );
 
   private List<AID> mobiles;
   private AID merchantAgent;
@@ -27,6 +34,8 @@ public class StorekeeperAgent extends SerShareAgent {
 
   protected void setup() {
     super.setup();
+    LOGGER.setLevel(Level.ALL);
+    LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
     this.mobiles = new ArrayList<>();
     this.merchantAgent = new AID("MerchantAgent", true);
     this.plans = new ArrayList<>();
@@ -60,6 +69,7 @@ public class StorekeeperAgent extends SerShareAgent {
       this.state = ActionState.RUNNING;
     } else if(this.resendWhen == StorekeeperAgent.resendValue){
       addBehaviour(new SendFoodPlanRequest(this));
+      LOGGER.log(Level.INFO, "Resend food plan request");
       this.resendWhen = 0;
     } else {
       this.resendWhen++;

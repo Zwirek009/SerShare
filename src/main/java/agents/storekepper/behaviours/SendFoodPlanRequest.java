@@ -10,6 +10,9 @@ import jade.lang.acl.UnreadableException;
 import utils.SerShareConstants;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+
+import static agents.storekepper.StorekeeperAgent.LOGGER;
 
 public class SendFoodPlanRequest extends Behaviour {
       private MessageTemplate mt; // The template to receive replies
@@ -35,7 +38,7 @@ public class SendFoodPlanRequest extends Behaviour {
         mt = MessageTemplate.and(MessageTemplate.MatchConversationId("food-plan"),
             MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
         step = 2;
-        System.out.println("ASK");
+        LOGGER.log(Level.INFO, "Send food plan request");
         break;
       case 1:
         // pobranie wszystkich odpowiedzi
@@ -47,9 +50,11 @@ public class SendFoodPlanRequest extends Behaviour {
               FoodPlan p = (FoodPlan) reply.getContentObject();
               getAgent().addFoodPlan(p);
             } else {
-              System.out.println("Unexpected response");
+              LOGGER.log(Level.WARNING, "Unexpected response");
             }
+            LOGGER.log(Level.INFO, "Get food plan");
             if (getAgent().hasAllPlans()) {
+              LOGGER.log(Level.INFO, "Get all food plan");
               step = 2;
             }
           } else {

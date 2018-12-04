@@ -5,6 +5,9 @@ import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
+import java.util.logging.Level;
+
+import static agents.storekepper.StorekeeperAgent.LOGGER;
 
 public class SendEstimatedFridgeStatePlan extends Behaviour {
   public SendEstimatedFridgeStatePlan(StorekeeperAgent agent) {
@@ -19,6 +22,8 @@ public class SendEstimatedFridgeStatePlan extends Behaviour {
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    LOGGER.log(Level.INFO, "Send estimate fridge state plan request");
     getAgent().send(inform);
   }
 

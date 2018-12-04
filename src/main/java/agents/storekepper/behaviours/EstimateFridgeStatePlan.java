@@ -1,14 +1,21 @@
 package agents.storekepper.behaviours;
 
 import agents.storekepper.StorekeeperAgent;
-import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 
-public class EstimateFridgeStatePlan extends CyclicBehaviour {
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import static agents.storekepper.StorekeeperAgent.LOGGER;
+
+public class EstimateFridgeStatePlan extends TickerBehaviour {
   public EstimateFridgeStatePlan(StorekeeperAgent agent) {
-    super(agent);
+    super(agent, TimeUnit.MINUTES.toMillis(1));
   }
 
-  public void action() {
+  @Override
+  protected void onTick() {
+    LOGGER.log(Level.INFO, "Tick");
     switch (getAgent().getActionState()) {
       case WAITING:
         break;
