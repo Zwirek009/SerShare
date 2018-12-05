@@ -21,6 +21,12 @@ public class CheckFridgeInternals extends TickerBehaviour {
 
     @Override
     protected void onTick() {
+
         getDataStore().put(FRIDGE_DATA, fridgeAPI.getStore());
+        getAgent().setFridgeStore(fridgeAPI.getStore());
+    }
+
+    public FridgeAgent getAgent() {
+        return (FridgeAgent) myAgent;
     }
 }

@@ -1,10 +1,11 @@
 package db;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FridgeStore {
+public class FridgeStore implements Serializable {
 
     List<FoodProduct> products;
 
