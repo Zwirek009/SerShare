@@ -7,10 +7,7 @@ import db.FridgeStore;
 import jade.core.AID;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -39,6 +36,7 @@ public class StorekeeperAgent extends SerShareAgent {
     this.plans = new ArrayList<>();
     this.fridgeStore = new FridgeStore();
     this.lastDate = LocalDate.now();
+    this.fridges = Collections.singletonList(new AID("FridgeAgent", AID.ISLOCALNAME));
     getFridgeStatusesAndFoodPlans();
     addBehaviour(new EstimateFridgeStatePlan(this));
   }

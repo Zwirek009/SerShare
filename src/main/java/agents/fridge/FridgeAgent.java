@@ -5,6 +5,10 @@ import agents.fridge.behaviours.CheckFridgeInternals;
 import agents.fridge.behaviours.GetFridgeInternalStateResponse;
 import db.FridgeStore;
 import jade.core.behaviours.DataStore;
+import jade.domain.DFService;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAException;
 import roles.FridgeStateController;
 
 import java.util.logging.Level;
@@ -23,7 +27,7 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
     protected void setup() {
         super.setup();
         // Add the CyclicBehaviour
-
+        LOGGER.info(getAID()..toString());
         LOGGER.setLevel(Level.ALL);
         LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
 
@@ -32,7 +36,6 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
         DataStore commonDataStore = new DataStore();
         addBehaviour(new CheckFridgeInternals(this, commonDataStore));
         addBehaviour(new GetFridgeInternalStateResponse(this, commonDataStore));
-
     }
 
     public void setFridgeStore(FridgeStore fridgeStore) {
