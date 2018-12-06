@@ -1,6 +1,8 @@
 package db;
 
-public class FoodProduct {
+import java.io.Serializable;
+
+public class FoodProduct implements Serializable {
 
     private String name;
 
@@ -26,5 +28,9 @@ public class FoodProduct {
 
     public void setName(String product) {
         this.name = name;
+    }
+
+    public String toString () {
+        return quantity + "of" + name;
     }
 }
