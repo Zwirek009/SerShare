@@ -2,6 +2,7 @@ package agents.storekepper.behaviours;
 
 import agents.storekepper.StorekeeperAgent;
 import customer.FoodPlan;
+import db.FridgeStore;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
@@ -9,6 +10,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.UnreadableException;
 import utils.SerShareConstants;
 
+import java.io.Serializable;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -38,14 +40,14 @@ public class SendFridgeStateRequest extends Behaviour {
         // Prepare the template to get proposals
         mt = MessageTemplate.and(MessageTemplate.MatchConversationId("fridge-state"),
             MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
-        step = 2;
+        step = 1;
 
         LOGGER.log(Level.INFO, "Send fridge state request");
         break;
       case 1:
         // pobranie wszystkich odpowiedzi
         ACLMessage reply = myAgent.receive(mt);
-      //  try {
+        try {
           if (reply != null) {
             Optional<String> errors = validateMessage(reply);
             if (errors.isPresent()) {
@@ -54,8 +56,9 @@ public class SendFridgeStateRequest extends Behaviour {
               LOGGER.log(Level.WARNING, errors.get());
             } else {
               //get fridge state
-
-              LOGGER.log(Level.INFO, "Get fridge state ");
+              FridgeStore store = (FridgeStore) reply.getContentObject();
+              getAgent().setFridgeStore(store);
+              LOGGER.log(Level.INFO, "Get fridge state " + store);
             }
             if (getAgent().hasAllFridgeStates()) {
               LOGGER.log(Level.INFO, "Get fridge state");
@@ -64,10 +67,10 @@ public class SendFridgeStateRequest extends Behaviour {
           } else {
             block();
           }
-//        } catch (UnreadableException e) {
-//          getAgent().sendStringReply(reply, ACLMessage.NOT_UNDERSTOOD, "( UnexpectedContent: " + e.getMessage() + ")");
-//          LOGGER.log(Level.WARNING, "Error when try send messages " + e.getMessage());
-//        }
+        } catch (UnreadableException e) {
+          getAgent().sendStringReply(reply, ACLMessage.NOT_UNDERSTOOD, "( UnexpectedContent: " + e.getMessage() + ")");
+          LOGGER.log(Level.WARNING, "Error when try send messages " + e.getMessage());
+        }
         break;
     }
   }
