@@ -9,14 +9,25 @@ import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 import ontology.peopleExampleOntology.PeopleOntology;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SerShareAgent extends Agent {
     private ContentManager manager = (ContentManager) getContentManager();
-    private AID[] otherAggents;
+
+    private List<AID> otherAgents;
     private Codec codec = new SLCodec();
 
     protected void setup() {
         System.out.println("Agent " + getLocalName() + " started.");
         manager.registerLanguage(codec);
+
+        otherAgents = new ArrayList<>();
+        String[] args = (String[])getArguments();
+        if (args == null || args.length == 0)
+            return;
+        for (String arg : args)
+            otherAgents.add(new AID(arg, false));
     }
 
     public void sendStringReply(ACLMessage msg, int type, String content) {
@@ -30,5 +41,9 @@ public class SerShareAgent extends Agent {
     protected void takeDown() {
         // Printout a dismissal message
         System.out.println("Agent " + getAID().getName() + " terminating.");
+    }
+
+    public List<AID> getOtherAgents() {
+        return otherAgents;
     }
 } // end Agent.java
