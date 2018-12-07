@@ -2,9 +2,11 @@ package agents.mobile;
 
 import agents.SerShareAgent;
 import agents.mobile.behaviours.GetFoodPlan;
+import agents.mobile.behaviours.ShareResponse;
 import agents.storekepper.StorekeeperAgent;
 import customer.FoodPlan;
 import customer.FoodPlanManager;
+import jade.core.AID;
 import roles.CustomerRole;
 
 import java.util.logging.Level;
@@ -24,6 +26,7 @@ public class MobileAgent extends SerShareAgent implements CustomerRole {
         LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
         this.foodPlanManager = new FoodPlanManager();
         addBehaviour(new GetFoodPlan(this));
+        addBehaviour(new ShareResponse(this));
     }
 
     public FoodPlan getFoodPlan() {

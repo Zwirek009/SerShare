@@ -31,6 +31,6 @@ public class FoodProduct implements Serializable {
     }
 
     public String toString () {
-        return quantity + "of" + name;
+        return quantity + " of " + name;
     }
 }

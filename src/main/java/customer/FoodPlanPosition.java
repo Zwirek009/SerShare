@@ -1,8 +1,9 @@
 package customer;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class FoodPlanPosition {
+public class FoodPlanPosition implements Serializable {
     private String product;
 
     //1 unit is 1 liter for liquid products or 1kg for weighted products or 1 item for the rest

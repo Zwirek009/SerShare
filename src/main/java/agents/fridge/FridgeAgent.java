@@ -37,11 +37,18 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
         LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
 
         mobiles = new ArrayList<>();
+
+        //tak musialem dodac aid, zeby wiadomosc doszla
+/*        AID aid = new AID("mobile@192.168.0.192:1099/JADE", true);
+        aid.addAddresses("http://modzel101:7778/acc");
+        System.out.println(aid);
+        mobiles.add(aid);*/
         this.fridgeStore = new FridgeStore();
 
         DataStore commonDataStore = new DataStore();
         addBehaviour(new CheckFridgeInternals(this, commonDataStore));
         addBehaviour(new GetFridgeInternalStateResponse(this, commonDataStore));
+        sendShareRequest(new FoodProduct("Mleko", 2.0));
     }
 
     public void sendShareRequest (FoodProduct prod) {

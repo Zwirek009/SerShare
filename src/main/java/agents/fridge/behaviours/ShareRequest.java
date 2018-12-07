@@ -39,16 +39,19 @@ public class ShareRequest extends Behaviour {
                 cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
                 cfp.setLanguage(SerShareConstants.JAVASERIALIZATION);
                 myAgent.send(cfp);
+                System.out.println("send request " + product.toString() + " to " + getAgent().getMobiles() + "  ");
                 step = 1;
                 break;
             case 1:
                 // pobranie wszystkich odpowiedzi
                 ACLMessage reply = myAgent.receive(mt);
-                if (reply.getConversationId() == "share" + product.toString())
+                if (reply != null && reply.getConversationId().equals("share" + product.toString())) {
                     shareResponse = reply.getContent();
+                    System.out.println("odp: " + shareResponse + " na " + product.toString());
+                    step = 2;
+                }
                 else
                     block();
-                step = 2;
                 break;
 
         }
