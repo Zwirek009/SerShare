@@ -53,7 +53,7 @@ public class GetFoodPlan extends CyclicBehaviour {
                     LOGGER.log(Level.INFO, "Sent food plan respond.");
                     state = WAIT_FOR_REQUEST;
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.WARNING, e.getMessage());
                 }
                 break;
         }
