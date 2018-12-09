@@ -28,6 +28,7 @@ public class StorekeeperAgent extends SerShareAgent {
   private LocalDate lastDate;
   private int resendWhen = 0;
   private Behaviour sendFoodPlanReguest;
+  private Behaviour sendFridgeStateReguest;
 
   protected void setup() {
     super.setup();
@@ -42,9 +43,10 @@ public class StorekeeperAgent extends SerShareAgent {
     addBehaviour(new GetMobileAid(this));
     addBehaviour(new GetFridgeAid(this));
     this.sendFoodPlanReguest = new SendFoodPlanRequest(this);
+    this.sendFridgeStateReguest = new SendFridgeStateRequest(this);
     addBehaviour(new EstimateFridgeStatePlan(this));
     addBehaviour(this.sendFoodPlanReguest);
-    addBehaviour(new SendFridgeStateRequest(this));
+    addBehaviour(this.sendFridgeStateReguest);
   }
 
   public LocalDate getLastDate() { return lastDate; }
@@ -87,6 +89,7 @@ public class StorekeeperAgent extends SerShareAgent {
     if(this.resendWhen == StorekeeperAgent.resendValue) {
       addBehaviour(new SendEstimatedFridgeStatePlan(this));
       this.sendFoodPlanReguest.reset();
+      this.sendFridgeStateReguest.reset();
       this.resendWhen = 0;
     }
     this.resendWhen++;

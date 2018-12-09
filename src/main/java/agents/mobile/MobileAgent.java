@@ -28,7 +28,7 @@ public class MobileAgent extends SerShareAgent implements CustomerRole {
         this.foodPlanManager = new FoodPlanManager();
         addBehaviour(new SendMobileAID(this));
         addBehaviour(new GetFoodPlan(this));
-        addBehaviour(new ShareResponse(this));
+       // addBehaviour(new ShareResponse(this));
     }
 
     public FoodPlan getFoodPlan() {

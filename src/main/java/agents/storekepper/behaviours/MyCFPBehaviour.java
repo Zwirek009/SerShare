@@ -48,7 +48,6 @@ public abstract class MyCFPBehaviour extends CyclicBehaviour {
 
         if (receiversWithoutReplyNr == 0) {
           mt = null;
-          step = 0;
         }
         break;
     }
