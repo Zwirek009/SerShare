@@ -30,7 +30,7 @@ public class GetFoodPlan extends CyclicBehaviour {
         switch (state) {
             case WAIT_FOR_REQUEST:
                 LOGGER.log(Level.INFO, "Waiting for food plan request.");
-                ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CFP));
+                ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("food-plan").MatchPerformative(ACLMessage.CFP));
                 if(msg != null) {
                     msgFromStorekeeper = msg;
                     LOGGER.log(Level.INFO, "Received food plan request " + msg);

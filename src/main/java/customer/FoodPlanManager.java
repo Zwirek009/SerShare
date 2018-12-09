@@ -7,16 +7,24 @@ import java.util.*;
 public class FoodPlanManager {
 
     private FoodPlan getFoodPlansFromCustomer() {
-        FoodPlanPosition pos1 = new FoodPlanPosition(ProductConstants.MILK, 1.5);
-        FoodPlanPosition pos2 = new FoodPlanPosition(ProductConstants.BREAD, 0.5);
+        //String[] products = {ProductConstants.MILK, ProductConstants.BREAD};
+        Random rand = new Random(System.currentTimeMillis());
+        Map<LocalDate, List<FoodPlanPosition>> plan = new HashMap<>();
+
+        for (int i = 0; i < rand.nextInt(5); ++i)
+            plan.put(LocalDate.of(2018, 12, (rand.nextInt(30) + 1)), getFoodPlanPositions(rand));
+
+        return new FoodPlan(plan);
+    }
+
+    private List<FoodPlanPosition> getFoodPlanPositions(Random rand) {
+        FoodPlanPosition pos1 = new FoodPlanPosition(ProductConstants.MILK, (rand.nextInt(5) + 0.5));
+        FoodPlanPosition pos2 = new FoodPlanPosition(ProductConstants.BREAD, (rand.nextInt(5) + 0.5));
         List<FoodPlanPosition> positions = new ArrayList<>();
         positions.add(pos1);
         positions.add(pos2);
 
-        Map<LocalDate, List<FoodPlanPosition>> plan = new HashMap<>();
-        plan.put(LocalDate.of(2018, 12, 3), positions);
-
-        return new FoodPlan(plan);
+        return positions;
     }
 
     public FoodPlan getPlan() {
