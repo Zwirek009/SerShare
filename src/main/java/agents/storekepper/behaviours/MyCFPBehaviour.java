@@ -35,7 +35,7 @@ public abstract class MyCFPBehaviour extends CyclicBehaviour {
         sendRequest();
         step = 1;
 
-        LOGGER.log(Level.INFO, "Send food plan request");
+        LOGGER.log(Level.INFO, "Send " + conversaionId + " request");
         break;
       case 1:
         ACLMessage reply = myAgent.receive(mt);

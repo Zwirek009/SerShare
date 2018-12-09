@@ -34,4 +34,8 @@ public class FoodPlanPosition implements Serializable {
     public void setProduct(String product) {
         this.product = product;
     }
+
+    public String toString () {
+        return quantity + " of " + product;
+    }
 }

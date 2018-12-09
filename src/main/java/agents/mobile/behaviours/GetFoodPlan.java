@@ -33,7 +33,7 @@ public class GetFoodPlan extends CyclicBehaviour {
                 ACLMessage msg = myAgent.receive(MessageTemplate.MatchPerformative(ACLMessage.CFP));
                 if(msg != null) {
                     msgFromStorekeeper = msg;
-                    LOGGER.log(Level.INFO, "Received food plan request.");
+                    LOGGER.log(Level.INFO, "Received food plan request " + msg);
                     state = GET_FOOD_PLAN;
                 }
                 else
@@ -50,7 +50,7 @@ public class GetFoodPlan extends CyclicBehaviour {
                 try {
                     ACLMessage response = createResponse();
                     myAgent.send(response);
-                    LOGGER.log(Level.INFO, "Sent food plan respond.");
+                    LOGGER.log(Level.INFO, "Sent food plan response " + foodPlan);
                     state = WAIT_FOR_REQUEST;
                 } catch (IOException e) {
                     LOGGER.log(Level.WARNING, e.getMessage());

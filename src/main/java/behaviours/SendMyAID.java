@@ -22,7 +22,7 @@ public class SendMyAID extends OneShotBehaviour {
 
     @Override
     public void action() {
-        List<AID> otherAgents = anAgent.getOtherAgents();
+        List<AID> otherAgents = getAgentsToConnectWith();
         if (otherAgents.isEmpty())
             return;
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -31,9 +31,21 @@ public class SendMyAID extends OneShotBehaviour {
             LOGGER.log(Level.INFO, "Agent " + anAgent.getAID() + "sends AID to " + agentID + ".");
         }
 
-        msg.setConversationId("hello");
+        msg.setConversationId(getConversationId());
         msg.setReplyWith("aid");
         msg.setLanguage(SerShareConstants.JAVASERIALIZATION);
         anAgent.send(msg);
+    }
+
+    protected String getConversationId() {
+        return "hello";
+    }
+
+    protected List<AID> getAgentsToConnectWith() {
+        return anAgent.getOtherAgents();
+    }
+
+    public SerShareAgent getAnAgent() {
+        return anAgent;
     }
 }

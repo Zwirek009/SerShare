@@ -1,9 +1,8 @@
 package agents.fridge;
 
 import agents.SerShareAgent;
-import agents.fridge.behaviours.CheckFridgeInternals;
-import agents.fridge.behaviours.GetFridgeInternalStateResponse;
-import agents.fridge.behaviours.ShareRequest;
+import agents.fridge.behaviours.*;
+import behaviours.SendMyAID;
 import db.FoodProduct;
 import db.FridgeStore;
 import jade.core.AID;
@@ -46,6 +45,8 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
         this.fridgeStore = new FridgeStore();
 
         DataStore commonDataStore = new DataStore();
+        addBehaviour(new SendFridgeAID(this));
+        addBehaviour(new GetMobileAIDForFridge(this));
         addBehaviour(new CheckFridgeInternals(this, commonDataStore));
         addBehaviour(new GetFridgeInternalStateResponse(this, commonDataStore));
         sendShareRequest(new FoodProduct("Mleko", 2.0));
@@ -66,4 +67,7 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
     public List<AID> getMobiles() {
         return this.mobiles;
     }
+
+    public void addNewMobile(AID newMobile) { if(!this.mobiles.contains(newMobile)) this.mobiles.add(newMobile);}
+
 }

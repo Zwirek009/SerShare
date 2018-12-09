@@ -38,9 +38,10 @@ public class StorekeeperAgent extends SerShareAgent {
     this.plans = new ArrayList<>();
     this.fridgeStore = new FridgeStore();
     this.lastDate = LocalDate.now();
-    this.fridges = Collections.singletonList(new AID("FridgeAgent", AID.ISLOCALNAME));
-    this.sendFoodPlanReguest = new SendFoodPlanRequest(this);
+    this.fridges = new ArrayList<>(); //Collections.singletonList(new AID("FridgeAgent", AID.ISLOCALNAME));
     addBehaviour(new GetMobileAid(this));
+    addBehaviour(new GetFridgeAid(this));
+    this.sendFoodPlanReguest = new SendFoodPlanRequest(this);
     addBehaviour(new EstimateFridgeStatePlan(this));
     addBehaviour(this.sendFoodPlanReguest);
     addBehaviour(new SendFridgeStateRequest(this));
@@ -65,6 +66,8 @@ public class StorekeeperAgent extends SerShareAgent {
   public void setFridgeStore(FridgeStore fridgeStore) {
     this.fridgeStore = fridgeStore;
   }
+
+  public void addNewFridge(AID newFridge) { if(!this.fridges.contains(newFridge)) this.fridges.add(newFridge);}
 
   public void addFoodPlan(FoodPlan plan) {
     this.plans.add(plan);

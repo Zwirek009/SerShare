@@ -17,7 +17,7 @@ public class GetMobileAid extends CyclicBehaviour {
   }
 
   public void action() {
-    ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("hello"));
+    ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("hello-from-mobile"));
 
     if (msg != null) {
       Optional<String> errors = validateMessage(msg);
