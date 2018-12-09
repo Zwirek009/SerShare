@@ -27,7 +27,7 @@ public class App {
 
         Properties props = new ExtendedProperties();
         props.setProperty(Profile.GUI, "true");
-        props.setProperty("host", "192.168.111.1");
+        props.setProperty("host", "localhost");
         props.setProperty("port", "8888");
         props.setProperty("platformId", "main");
         Profile profile = new ProfileImpl(props);
@@ -37,19 +37,19 @@ public class App {
         try {
             String[] agentArgs = new String[] {};
 
-            /*for (int noa = 0; noa < SerShareConstants.NUMBER_OF_MERCHANT_AGENTS; ++noa) {
+            for (int noa = 0; noa < SerShareConstants.NUMBER_OF_MERCHANT_AGENTS; ++noa) {
                 AgentController ag = mainContainer.createNewAgent(SerShareConstants.MERCHANT_AGENT_NAME+noa,
                         SerShareConstants.MERCHANT_AGENT_CLASS_PATH,
                          agentArgs);//arguments
                 ag.start();
-            }*/
+            }
             for (int noa = 0; noa < SerShareConstants.NUMBER_OF_FRIDGE_AGENTS; ++noa) {
-                /*agentArgs = new String[] {SerShareConstants.MERCHANT_AGENT_NAME+(noa%SerShareConstants.NUMBER_OF_MERCHANT_AGENTS)};
+                agentArgs = new String[] {SerShareConstants.MERCHANT_AGENT_NAME+(noa%SerShareConstants.NUMBER_OF_MERCHANT_AGENTS)};
                 AgentController sag = mainContainer.createNewAgent(SerShareConstants.STOREKEEPER_AGENT_NAME+noa,
                         SerShareConstants.STOREKEEPER_AGENT_CLASS_PATH,
                         agentArgs);//arguments
-                sag.start();*/
-                //agentArgs = new String[] {SerShareConstants.STOREKEEPER_AGENT_NAME+noa};
+                sag.start();
+                agentArgs = new String[] {SerShareConstants.STOREKEEPER_AGENT_NAME+noa};
                 AgentController fag = mainContainer.createNewAgent(SerShareConstants.FRIDGE_AGENT_NAME+noa,
                         SerShareConstants.FRIDGE_AGENT_CLASS_PATH,
                         agentArgs);//arguments

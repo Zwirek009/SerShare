@@ -35,6 +35,7 @@ public class MerchantAgent extends SerShareAgent {
   }
 
   public void planOrder() {
+    //Todo wmyslec jak planuje zamowienia
     nextOrder = shoppingList.values().stream()
         .flatMap(f -> f.getDates().stream())
         .min(LocalDate::compareTo);

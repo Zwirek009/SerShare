@@ -7,6 +7,7 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.UnreadableException;
 import utils.SerShareConstants;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -25,15 +26,17 @@ public class GettingFoodPlans extends CyclicBehaviour {
     try {
       if (msg != null) {
         Optional<String> errors = validateMessage(msg);
-        if (errors.isPresent()) {
+        if(msg.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+          LOGGER.log(Level.INFO, "Not understood");
+        } else if (errors.isPresent()) {
           getAgent().sendStringReply(msg, ACLMessage.NOT_UNDERSTOOD, errors.get());
 
           LOGGER.log(Level.WARNING, errors.get());
         } else {
-          FoodPlan newPlan = (FoodPlan) msg.getContentObject();
-          getAgent().addFoodPlan(msg.getSender(), newPlan);
+          ArrayList<FoodPlan> newPlans = (ArrayList<FoodPlan>) msg.getContentObject();
+          newPlans.forEach(p -> getAgent().addFoodPlan(msg.getSender(), p));
 
-          LOGGER.log(Level.INFO, "Get plan " + newPlan);
+          LOGGER.log(Level.INFO, "Get plan ");
         }
 
       } else {
@@ -50,7 +53,7 @@ public class GettingFoodPlans extends CyclicBehaviour {
     if (msg.getPerformative() != ACLMessage.INFORM) {
       return Optional.of("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");
     }
-    if (!msg.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
+    if (msg.getLanguage() == null || !msg.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
       return Optional.of("( (Unexpected-language " + msg.getLanguage() + ") )");
     }
     return Optional.empty();

@@ -5,6 +5,7 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.DataStore;
 import jade.lang.acl.ACLMessage;
+import utils.SerShareConstants;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -26,6 +27,7 @@ public class GetFridgeInternalStateResponse extends CyclicBehaviour {
 
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
+            reply.setLanguage(SerShareConstants.JAVASERIALIZATION);
             try {
                 reply.setContentObject(getAgent().getFridgeStore());
             } catch (IOException e) {

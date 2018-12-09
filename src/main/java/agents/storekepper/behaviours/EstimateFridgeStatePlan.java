@@ -15,9 +15,10 @@ public class EstimateFridgeStatePlan extends TickerBehaviour {
 
   @Override
   protected void onTick() {
-    LOGGER.log(Level.INFO, "Tick");
+    LOGGER.log(Level.INFO, "Tick " + getAgent().getActionState());
     switch (getAgent().getActionState()) {
       case WAITING:
+        getAgent().estimate();
         break;
       case RUNNING:
         getAgent().estimate();

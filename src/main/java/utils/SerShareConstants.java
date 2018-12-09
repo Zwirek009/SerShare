@@ -13,8 +13,8 @@ public class SerShareConstants {
   public static final String FRIDGE_AGENT_CLASS_PATH = "agents.fridge.FridgeAgent";
   public static final String MOBILE_AGENT_CLASS_PATH = "agents.mobile.MobileAgent";
 
-  public static final int NUMBER_OF_MERCHANT_AGENTS = 3;
-  public static final int NUMBER_OF_FRIDGE_AGENTS = 15;
-  public static final int NUMBER_OF_MOBILE_AGENTS = 30;
+  public static final int NUMBER_OF_MERCHANT_AGENTS = 1;
+  public static final int NUMBER_OF_FRIDGE_AGENTS = 1;
+  public static final int NUMBER_OF_MOBILE_AGENTS = 2;
 
 }

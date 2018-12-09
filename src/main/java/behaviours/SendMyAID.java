@@ -31,7 +31,7 @@ public class SendMyAID extends OneShotBehaviour {
             LOGGER.log(Level.INFO, "Agent " + anAgent.getAID() + "sends AID to " + agentID + ".");
         }
 
-        msg.setConversationId("hello"+anAgent.getLocalName());
+        msg.setConversationId("hello");
         msg.setReplyWith("aid");
         msg.setLanguage(SerShareConstants.JAVASERIALIZATION);
         anAgent.send(msg);
