@@ -28,7 +28,7 @@ public class FoodPlan implements Serializable {
 
     public void deletePositionsToDay(LocalDate date) {
         this.plan =  plan.entrySet().stream()
-            .filter(d -> d.getKey().isBefore(date))
+            .filter(d -> !d.getKey().isBefore(date))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 

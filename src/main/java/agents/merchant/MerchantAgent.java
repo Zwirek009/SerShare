@@ -48,13 +48,18 @@ public class MerchantAgent extends SerShareAgent {
 
   public OrderResponse makeOrder() {
     List<FoodPlanPosition> newOrder = this.shoppingList.values().stream()
-        .flatMap(o -> o.getPositionsBeforeDay(LocalDate.now()).stream())
+        .flatMap(o -> o.getPositionsBeforeDay(LocalDate.now().plusDays(1)).stream())
         .collect(Collectors.toList());
     List<AID> customers = this.shoppingList.entrySet().stream()
-        .filter(o -> o.getValue().getPositionsBeforeDay(LocalDate.now()).size() > 0)
+        .filter(o -> o.getValue().getPositionsBeforeDay(LocalDate.now().plusDays(1)).size() > 0)
         .map(Map.Entry::getKey)
         .collect(Collectors.toList());
-    LOGGER.log(Level.INFO, "Make order: " + newOrder);
+    customers.forEach(c -> {
+      FoodPlan plan = this.shoppingList.get(c);
+      plan.deletePositionsToDay(LocalDate.now().plusDays(1));
+      this.shoppingList.replace(c, plan);
+    });
+    LOGGER.log(Level.INFO, "Make order: " + newOrder + " : ");
     return new OrderResponse(LocalDate.now().plusDays(7), customers);
   }
 
