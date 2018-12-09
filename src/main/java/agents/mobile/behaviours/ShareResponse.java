@@ -4,6 +4,7 @@ import agents.mobile.MobileAgent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 ;
 
 public class ShareResponse extends CyclicBehaviour {
@@ -13,8 +14,8 @@ public class ShareResponse extends CyclicBehaviour {
     private String response = "Tak";
 
     public void action() {
-        ACLMessage msg = myAgent.receive();
-        if (msg != null && msg.getConversationId().contains("share")) {
+        ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("share"));
+        if (msg != null) {
             ACLMessage reply = msg.createReply();
             reply.setContent(response);
             reply.setConversationId(msg.getConversationId());

@@ -35,7 +35,7 @@ public class ShareRequest extends Behaviour {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                cfp.setConversationId("share" + product.toString());
+                cfp.setConversationId("share");
                 cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
                 cfp.setLanguage(SerShareConstants.JAVASERIALIZATION);
                 myAgent.send(cfp);
