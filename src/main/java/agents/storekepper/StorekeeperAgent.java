@@ -34,7 +34,7 @@ public class StorekeeperAgent extends SerShareAgent {
     LOGGER.setLevel(Level.ALL);
     LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
     this.mobiles = new ArrayList<>();
-    this.merchantAgent = new AID("merchantAgent0@192.168.0.103:8888/JADE", AID.ISLOCALNAME);
+    this.merchantAgent = new AID("merchantAgent0", AID.ISLOCALNAME);
     this.plans = new ArrayList<>();
     this.fridgeStore = new FridgeStore();
     this.lastDate = LocalDate.now();
