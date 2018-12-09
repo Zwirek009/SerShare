@@ -23,7 +23,6 @@ public class GetFridgeInternalStateResponse extends CyclicBehaviour {
     @Override
     public void action() {
         ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("fridge-state"));
-        LOGGER.log(Level.INFO, "Get fridge state request " + msg);
         if (msg != null) {
             LOGGER.log(Level.INFO, "Get fridge state request " + msg);
 

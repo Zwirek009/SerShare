@@ -25,4 +25,11 @@ public class FridgeStore implements Serializable {
     public List<FoodProduct> getProducts() {
         return products;
     }
+
+    @Override
+    public String toString() {
+        return "FridgeState{" +
+                "state=" + products.toString() +
+                '}';
+    }
 }
