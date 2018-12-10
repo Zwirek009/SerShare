@@ -1,0 +1,2 @@
+How to run ?
+% java jade.Boot -agents "sender:agents.fridge.FridgeAgent;receiver:agents.ExampleAgent" -gui
