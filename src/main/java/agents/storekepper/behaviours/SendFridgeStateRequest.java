@@ -36,7 +36,7 @@ public class SendFridgeStateRequest extends MyCFPBehaviour {
       getAgent().setFridgeStore(store);
 
       LOGGER.log(Level.INFO, "Get fridge state " + store);
-    } catch (UnreadableException e) {
+    } catch (UnreadableException | ClassCastException e) {
       onErrors(reply, "Bad content");
     }
   }

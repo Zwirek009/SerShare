@@ -33,7 +33,7 @@ public class SendFoodPlanRequest extends MyCFPBehaviour {
       getAgent().addFoodPlan(newPlan);
 
       LOGGER.log(Level.INFO, "Get plan " + newPlan);
-    } catch (UnreadableException e) {
+    } catch (UnreadableException | ClassCastException e) {
       onErrors(reply, "Bad content");
     }
   }
