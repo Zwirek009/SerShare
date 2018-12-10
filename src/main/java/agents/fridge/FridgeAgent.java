@@ -49,7 +49,7 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
         addBehaviour(new GetMobileAIDForFridge(this));
         addBehaviour(new CheckFridgeInternals(this, commonDataStore));
         addBehaviour(new GetFridgeInternalStateResponse(this, commonDataStore));
-        sendShareRequest(new FoodProduct("Mleko", 2.0));
+        //sendShareRequest(new FoodProduct("Mleko", 2.0));
     }
 
     public void sendShareRequest (FoodProduct prod) {
