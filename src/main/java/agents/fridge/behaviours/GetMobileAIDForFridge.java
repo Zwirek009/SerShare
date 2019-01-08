@@ -1,7 +1,6 @@
 package agents.fridge.behaviours;
 
 import agents.fridge.FridgeAgent;
-import agents.storekepper.StorekeeperAgent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -29,7 +28,6 @@ public class GetMobileAIDForFridge extends CyclicBehaviour {
 
                 LOGGER.log(Level.WARNING, errors.get());
             } else {
-                getAgent().addNewMobile(msg.getSender());
 
                 LOGGER.log(Level.INFO, "Get new mobile " + msg.getSender());
             }

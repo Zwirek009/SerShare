@@ -14,14 +14,15 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 
+import static utils.SerShareConstants.FRIDGE_AGENT_NAME;
+import static utils.SerShareConstants.MERCHANT_AGENT_NAME;
+import static utils.SerShareConstants.MOBILE_AGENT_NAME;
+
 public class StorekeeperAgent extends SerShareAgent {
-  private static int resendValue = 1;
+  private static int resendValue = 7;
 
   public static final Logger LOGGER = Logger.getLogger(StorekeeperAgent.class.getName());
 
-  private List<AID> mobiles;
-  private List<AID> fridges;
-  private AID merchantAgent;
   private List<FoodPlan> plans;
   private FridgeStore fridgeStore;
   private ActionState state = ActionState.WAITING;
@@ -34,17 +35,16 @@ public class StorekeeperAgent extends SerShareAgent {
     super.setup();
     LOGGER.setLevel(Level.ALL);
     LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
-    this.mobiles = new ArrayList<>();
-    this.merchantAgent = new AID("merchantAgent0", AID.ISLOCALNAME);
+
     this.plans = new ArrayList<>();
     this.fridgeStore = new FridgeStore();
     this.lastDate = LocalDate.now();
-    this.fridges = new ArrayList<>(); //Collections.singletonList(new AID("FridgeAgent", AID.ISLOCALNAME));
-    addBehaviour(new GetMobileAid(this));
-    addBehaviour(new GetFridgeAid(this));
+
     this.sendFoodPlanReguest = new SendFoodPlanRequest(this);
     this.sendFridgeStateReguest = new SendFridgeStateRequest(this);
+
     addBehaviour(new EstimateFridgeStatePlan(this));
+
     addBehaviour(this.sendFoodPlanReguest);
     addBehaviour(this.sendFridgeStateReguest);
   }
@@ -53,29 +53,25 @@ public class StorekeeperAgent extends SerShareAgent {
 
   public ActionState getActionState() { return state; }
 
-  public AID getMerchantAgent() { return merchantAgent; }
+  public AID getMerchantAgent() { return this.getService(MERCHANT_AGENT_NAME); }
 
   public List<FoodPlan> getPlans() { return plans; }
 
   public List<AID> getMobiles() {
-    return this.mobiles;
+    return Arrays.asList(this.searchDF(MOBILE_AGENT_NAME));
   }
 
   public List<AID> getFridges() {
-    return this.fridges;
+    return Arrays.asList(this.searchDF(FRIDGE_AGENT_NAME));
   }
 
   public void setFridgeStore(FridgeStore fridgeStore) {
     this.fridgeStore = fridgeStore;
   }
 
-  public void addNewFridge(AID newFridge) { if(!this.fridges.contains(newFridge)) this.fridges.add(newFridge);}
-
   public void addFoodPlan(FoodPlan plan) {
     this.plans.add(plan);
   }
-
-  public void addNewMobile(AID newMobile) { if(!this.mobiles.contains(newMobile)) this.mobiles.add(newMobile);}
 
   public boolean hasAllFridgeStates() {
     return true;
@@ -83,7 +79,7 @@ public class StorekeeperAgent extends SerShareAgent {
 
   public void estimate() {
     //TODO
-    if(!this.plans.isEmpty() && !this.mobiles.isEmpty() && this.state != ActionState.RUNNING) {
+    if(!this.plans.isEmpty() && this.state != ActionState.RUNNING) {
       this.state = ActionState.RUNNING;
     }
     if(this.resendWhen == StorekeeperAgent.resendValue) {

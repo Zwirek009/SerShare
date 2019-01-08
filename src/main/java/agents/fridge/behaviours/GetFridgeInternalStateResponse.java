@@ -1,7 +1,6 @@
 package agents.fridge.behaviours;
 
 import agents.fridge.FridgeAgent;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.DataStore;
 import jade.lang.acl.ACLMessage;
