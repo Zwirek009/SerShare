@@ -17,6 +17,10 @@ public class FoodPlan implements Serializable {
         return plan.get(date);
     }
 
+    public Boolean isEmpty() {
+        return plan.isEmpty();
+    }
+
     public Set<LocalDate> getDates() { return plan.keySet(); }
 
     public List<FoodPlanPosition> getPositionsBeforeDay(LocalDate date) {

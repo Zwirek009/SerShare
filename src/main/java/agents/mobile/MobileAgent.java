@@ -4,12 +4,15 @@ import agents.SerShareAgent;
 import agents.mobile.behaviours.GetFoodPlan;
 import customer.FoodPlan;
 import customer.FoodPlanManager;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import roles.CustomerRole;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
+
+import static utils.SerShareConstants.MOBILE_AGENT_NAME;
 
 public class MobileAgent extends SerShareAgent implements CustomerRole {
 
@@ -24,6 +27,11 @@ public class MobileAgent extends SerShareAgent implements CustomerRole {
         this.foodPlanManager = new FoodPlanManager();
         addBehaviour(new GetFoodPlan(this));
        // addBehaviour(new ShareResponse(this));
+
+        ServiceDescription sd  = new ServiceDescription();
+        sd.setType( MOBILE_AGENT_NAME );
+        sd.setName( getLocalName() );
+        register( sd );
     }
 
     public FoodPlan getFoodPlan() {

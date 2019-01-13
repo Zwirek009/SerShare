@@ -3,6 +3,8 @@ package agents.storekepper;
 import agents.SerShareAgent;
 import agents.storekepper.behaviours.*;
 import customer.FoodPlan;
+import customer.FoodPlanPosition;
+import db.FoodProduct;
 import db.FridgeStore;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
@@ -13,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
+import java.util.stream.Collectors;
 
 import static utils.SerShareConstants.FRIDGE_AGENT_NAME;
 import static utils.SerShareConstants.MERCHANT_AGENT_NAME;
@@ -30,6 +33,8 @@ public class StorekeeperAgent extends SerShareAgent {
   private int resendWhen = 0;
   private Behaviour sendFoodPlanReguest;
   private Behaviour sendFridgeStateReguest;
+
+  private int lastFridgeState = 7;
 
   protected void setup() {
     super.setup();
@@ -78,17 +83,48 @@ public class StorekeeperAgent extends SerShareAgent {
   }
 
   public void estimate() {
-    //TODO
     if(!this.plans.isEmpty() && this.state != ActionState.RUNNING) {
       this.state = ActionState.RUNNING;
+    }
+    if(this.lastFridgeState == 0) {
+      this.sendFridgeStateReguest.reset();
+      this.lastFridgeState = 7;
     }
     if(this.resendWhen == StorekeeperAgent.resendValue) {
       addBehaviour(new SendEstimatedFridgeStatePlan(this));
       this.sendFoodPlanReguest.reset();
-      this.sendFridgeStateReguest.reset();
       this.resendWhen = 0;
     }
+    if(this.plans.isEmpty()) {
+      this.sendFoodPlanReguest.reset();
+    }
+    this.updateFoodPlans();
     this.resendWhen++;
+  }
+
+  private void updateFoodPlans() {
+    try {
+      this.plans = this.plans.stream().filter(p -> !p.isEmpty()).collect(Collectors.toList());
+      this.plans.forEach(p -> {
+        List<Boolean> foodPlanPositionList = p.getPositions(LocalDate.now()).stream().map(f -> {
+          Boolean isInFridge =
+              this.fridgeStore.getProducts().stream().
+                  anyMatch(fridgeP -> fridgeP.getName().equals(f.getProduct()) && fridgeP.getQuantity() <= f.getQuantity());
+
+          if (isInFridge) {
+            p.deletePosition(LocalDate.now(), f);
+          }
+          return isInFridge;
+        }).collect(Collectors.toList());
+
+        if (foodPlanPositionList.stream().allMatch(a -> a)) {
+          p.deletePositions(LocalDate.now());
+        }
+        p.deletePositionsToDay(LocalDate.now().minusDays(1));
+      });
+    } catch (Exception e) {
+      this.plans.forEach(p -> p.deletePositionsToDay(LocalDate.now()));
+    }
   }
 
   private Map<String, Double> getAllProductsDemand() {
