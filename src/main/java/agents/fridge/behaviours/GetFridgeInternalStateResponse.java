@@ -26,7 +26,7 @@ public class GetFridgeInternalStateResponse extends CyclicBehaviour {
             LOGGER.log(Level.INFO, "Get fridge state request " + msg);
 
             ACLMessage reply = msg.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
+            reply.setPerformative(ACLMessage.INFORM_REF);
             reply.setLanguage(SerShareConstants.JAVASERIALIZATION);
             try {
                 reply.setContentObject(getAgent().getFridgeStore());

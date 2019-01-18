@@ -2,19 +2,13 @@ package agents.fridge;
 
 import agents.SerShareAgent;
 import agents.fridge.behaviours.*;
-import behaviours.SendMyAID;
-import com.sun.xml.internal.ws.wsdl.writer.document.Service;
 import db.FoodProduct;
 import db.FridgeStore;
 import jade.core.AID;
 import jade.core.behaviours.DataStore;
-import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.domain.FIPAException;
 import roles.FridgeStateController;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;

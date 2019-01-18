@@ -36,7 +36,7 @@ public class GettingFoodPlans extends CyclicBehaviour {
           ArrayList<FoodPlan> newPlans = (ArrayList<FoodPlan>) msg.getContentObject();
           newPlans.forEach(p -> getAgent().addFoodPlan(msg.getSender(), p));
 
-          LOGGER.log(Level.INFO, "Get plan ");
+          LOGGER.log(Level.INFO, "Get plan :" + newPlans);
         }
 
       } else {
