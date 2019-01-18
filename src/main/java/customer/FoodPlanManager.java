@@ -12,7 +12,7 @@ public class FoodPlanManager {
         Map<LocalDate, List<FoodPlanPosition>> plan = new HashMap<>();
 
         for (int i = 0; i < rand.nextInt(5); ++i)
-            plan.put(LocalDate.of(2018, 12, (rand.nextInt(30) + 1)), getFoodPlanPositions(rand));
+            plan.put(LocalDate.of(2019, 01, (rand.nextInt(10) + 20)), getFoodPlanPositions(rand));
 
         return new FoodPlan(plan);
     }
