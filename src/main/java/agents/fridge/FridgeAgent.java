@@ -43,7 +43,6 @@ public class FridgeAgent extends SerShareAgent implements FridgeStateController 
 
         DataStore commonDataStore = new DataStore();
 
-        addBehaviour(new GetMobileAIDForFridge(this));
         addBehaviour(new CheckFridgeInternals(this, commonDataStore));
         addBehaviour(new GetFridgeInternalStateResponse(this, commonDataStore));
 
