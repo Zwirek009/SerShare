@@ -17,7 +17,6 @@ public class FridgeStore implements Serializable {
         this.products = products;
     }
 
-
     public void setProducts(List<FoodProduct> products) {
         this.products = products;
     }

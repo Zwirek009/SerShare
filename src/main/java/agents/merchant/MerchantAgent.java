@@ -7,6 +7,7 @@ import agents.merchant.behaviours.PlanningOrder;
 import customer.FoodPlan;
 import customer.FoodPlanPosition;
 import jade.core.AID;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.logging.StreamHandler;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.empty;
+import static utils.SerShareConstants.MERCHANT_AGENT_NAME;
 
 public class MerchantAgent extends SerShareAgent {
 
@@ -27,15 +29,22 @@ public class MerchantAgent extends SerShareAgent {
 
   protected void setup() {
     super.setup();
+
     LOGGER.setLevel(Level.ALL);
     LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
+
     this.shoppingList = new HashMap<>();
+
     addBehaviour(new GettingFoodPlans(this));
     addBehaviour(new PlanningOrder(this));
+
+    ServiceDescription sd  = new ServiceDescription();
+    sd.setType( MERCHANT_AGENT_NAME );
+    sd.setName( getLocalName() );
+    register( sd );
   }
 
   public void planOrder() {
-    //Todo wmyslec jak planuje zamowienia
     nextOrder = shoppingList.values().stream()
         .flatMap(f -> f.getDates().stream())
         .min(LocalDate::compareTo);

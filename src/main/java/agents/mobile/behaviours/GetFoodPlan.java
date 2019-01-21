@@ -1,12 +1,15 @@
 package agents.mobile.behaviours;
 
+import agents.SerShareAgent;
 import agents.mobile.MobileAgent;
 import customer.FoodPlan;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import utils.SerShareConstants;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.logging.Level;
 
 import static agents.mobile.MobileAgent.LOGGER;
@@ -30,11 +33,19 @@ public class GetFoodPlan extends CyclicBehaviour {
         switch (state) {
             case WAIT_FOR_REQUEST:
                 LOGGER.log(Level.INFO, "Waiting for food plan request.");
-                ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("food-plan").MatchPerformative(ACLMessage.CFP));
+                ACLMessage msg = myAgent.receive(MessageTemplate.MatchConversationId("food-plan"));
+
                 if(msg != null) {
-                    msgFromStorekeeper = msg;
-                    LOGGER.log(Level.INFO, "Received food plan request " + msg);
-                    state = GET_FOOD_PLAN;
+                    Optional<String> errors = validateMessage(msg);
+                    if (msg.getPerformative() == ACLMessage.NOT_UNDERSTOOD) {
+                        onNotUnderstood();
+                    } else if (errors.isPresent()) {
+                        onErrors(msg, errors.get());
+                    } else {
+                        msgFromStorekeeper = msg;
+                        LOGGER.log(Level.INFO, "Received food plan request " + msg);
+                        state = GET_FOOD_PLAN;
+                    }
                 }
                 else
                     block();
@@ -42,7 +53,6 @@ public class GetFoodPlan extends CyclicBehaviour {
 
             case GET_FOOD_PLAN:
                 foodPlan = ((MobileAgent)myAgent).getFoodPlan();
-                LOGGER.log(Level.INFO, "Food plan ready to send.");
                 state = SEND_RESPONSE;
                 break;
 
@@ -62,8 +72,28 @@ public class GetFoodPlan extends CyclicBehaviour {
 
     private ACLMessage createResponse() throws IOException {
         ACLMessage reply = msgFromStorekeeper.createReply();
-        reply.setPerformative(ACLMessage.INFORM);
+        reply.setPerformative(ACLMessage.INFORM_REF);
         reply.setContentObject(foodPlan);
         return reply;
+    }
+
+    protected Optional<String> validateMessage(ACLMessage msg) {
+        if (msg.getPerformative() != ACLMessage.QUERY_REF) {
+            return Optional.of("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");
+        }
+        if (msg.getLanguage() == null || !msg.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
+            return Optional.of("( (Unexpected-language " + msg.getLanguage() + ") )");
+        }
+        return Optional.empty();
+    }
+
+    protected void onNotUnderstood() {
+        LOGGER.log(Level.INFO, "Not understood");
+    }
+
+    protected void onErrors(ACLMessage reply, String error) {
+        ((SerShareAgent) getAgent()).sendStringReply(reply, ACLMessage.NOT_UNDERSTOOD, error);
+
+        LOGGER.log(Level.WARNING, error);
     }
 }

@@ -14,7 +14,7 @@ import static agents.merchant.MerchantAgent.LOGGER;
 
 public class PlanningOrder extends TickerBehaviour {
   public PlanningOrder(MerchantAgent agent) {
-    super(agent, TimeUnit.MINUTES.toMillis(1));
+    super(agent, TimeUnit.SECONDS.toMillis(32));
   }
 
   @Override
