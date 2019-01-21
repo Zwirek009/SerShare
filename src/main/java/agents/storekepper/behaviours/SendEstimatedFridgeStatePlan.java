@@ -21,11 +21,12 @@ public class SendEstimatedFridgeStatePlan extends Behaviour {
     try {
       ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
       inform.addReceiver(getAgent().getMerchantAgent());
-      inform.setContentObject(new ArrayList<FoodPlan>(getAgent().getPlans()));
+      ArrayList<FoodPlan> foodPlans = new ArrayList<>(getAgent().getPlans());
+      inform.setContentObject(foodPlans);
       inform.setLanguage(SerShareConstants.JAVASERIALIZATION);
       getAgent().send(inform);
 
-      LOGGER.log(Level.INFO, "Send estimate fridge state plan request");
+      LOGGER.log(Level.INFO, "Send estimate fridge state plan." + foodPlans);
     } catch (IOException e) {
       LOGGER.log(Level.INFO, "Error when try to sen fridge plans " + e.getMessage());
     }

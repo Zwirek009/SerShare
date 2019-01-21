@@ -53,7 +53,6 @@ public class GetFoodPlan extends CyclicBehaviour {
 
             case GET_FOOD_PLAN:
                 foodPlan = ((MobileAgent)myAgent).getFoodPlan();
-                LOGGER.log(Level.INFO, "Food plan ready to send.");
                 state = SEND_RESPONSE;
                 break;
 
