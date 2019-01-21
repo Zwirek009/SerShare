@@ -14,15 +14,15 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import java.util.logging.StreamHandler;
 
-public abstract class MyCFPBehaviour extends CyclicBehaviour {
-  public static final Logger LOGGER = Logger.getLogger(MyCFPBehaviour.class.getName());
+public abstract class MyQueryBehaviour extends CyclicBehaviour {
+  public static final Logger LOGGER = Logger.getLogger(MyQueryBehaviour.class.getName());
 
   private MessageTemplate mt; // The template to receive replies
   private int step = 0;
   private int receiversWithoutReplyNr = 0;
   private String conversaionId;
 
-  public MyCFPBehaviour(SerShareAgent agent, String conversationId) {
+  public MyQueryBehaviour(SerShareAgent agent, String conversationId) {
     super(agent);
     LOGGER.setLevel(Level.ALL);
     LOGGER.addHandler(new StreamHandler(System.out, new SimpleFormatter()));
@@ -55,23 +55,25 @@ public abstract class MyCFPBehaviour extends CyclicBehaviour {
 
   private void sendRequest() {
     // wysłanie zapytania do wszystkich
-    ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
-
+    ACLMessage query_ref = new ACLMessage(ACLMessage.QUERY_REF);
+    List<AID> receivers = getReceivers();
+      if (receivers.isEmpty())
+        LOGGER.log(Level.WARNING, "No receivers for message!");
     for (AID m : getReceivers()) {
       receiversWithoutReplyNr++;
-      cfp.addReceiver(m);
+      query_ref.addReceiver(m);
     }
-    cfp.setConversationId(conversaionId);
-    cfp.setReplyWith("cfp" + System.currentTimeMillis()); // Unique value
-    cfp.setLanguage(SerShareConstants.JAVASERIALIZATION);
-    myAgent.send(cfp);
+    query_ref.setConversationId(conversaionId);
+    query_ref.setReplyWith("query_ref" + System.currentTimeMillis()); // Unique value
+    query_ref.setLanguage(SerShareConstants.JAVASERIALIZATION);
+    myAgent.send(query_ref);
 
     // Prepare the template to get proposals
     mt = MessageTemplate.and(MessageTemplate.MatchConversationId(conversaionId),
-        MessageTemplate.MatchInReplyTo(cfp.getReplyWith()));
+        MessageTemplate.MatchInReplyTo(query_ref.getReplyWith()));
 
 
-    LOGGER.log(Level.INFO, "Send cfp with id: " + conversaionId);
+    LOGGER.log(Level.INFO, "Send query_ref with id: " + conversaionId);
   }
 
   private void getReply(ACLMessage reply) {
@@ -85,11 +87,11 @@ public abstract class MyCFPBehaviour extends CyclicBehaviour {
       receiversWithoutReplyNr--;
     }
 
-    LOGGER.log(Level.INFO, "Reply with id: " + conversaionId);
+    LOGGER.log(Level.INFO, "Got reply: " + reply);
   }
 
   protected Optional<String> validateMessage(ACLMessage msg) {
-    if (msg.getPerformative() != ACLMessage.INFORM) {
+    if (msg.getPerformative() != ACLMessage.INFORM_REF) {
       return Optional.of("( (Unexpected-act " + ACLMessage.getPerformative(msg.getPerformative()) + ") )");
     }
     if (msg.getLanguage() == null || !msg.getLanguage().equals(SerShareConstants.JAVASERIALIZATION)) {
