@@ -100,6 +100,7 @@ public class StorekeeperAgent extends SerShareAgent {
     }
     this.updateFoodPlans();
     this.resendWhen++;
+    this.lastFridgeState--;
   }
 
   private void updateFoodPlans() {
