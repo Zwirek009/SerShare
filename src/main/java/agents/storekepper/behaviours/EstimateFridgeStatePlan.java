@@ -10,7 +10,7 @@ import static agents.storekepper.StorekeeperAgent.LOGGER;
 
 public class EstimateFridgeStatePlan extends TickerBehaviour {
   public EstimateFridgeStatePlan(StorekeeperAgent agent) {
-    super(agent, TimeUnit.SECONDS.toMillis(15));
+    super(agent, TimeUnit.SECONDS.toMillis(8));
   }
 
   @Override
